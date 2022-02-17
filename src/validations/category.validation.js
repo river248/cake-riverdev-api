@@ -3,8 +3,8 @@ import { HttpStatusCode } from '../utils/constants'
 
 const createNew = async (req, res, next) => {
     const condition = Joi.object({
-        name: Joi.string().required().min(3).trim(),
-        thumbnail: Joi.string().required().min(3).trim()
+        categoryName: Joi.string().required().min(3).trim(),
+        image: Joi.string().required().min(3).trim()
     })
     try {
         await condition.validateAsync(req.body, { abortEarly: false })
@@ -18,8 +18,8 @@ const createNew = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     const condition = Joi.object({
-        name: Joi.string().min(3).trim(),
-        thumbnail: Joi.string().min(3).trim()
+        categoryName: Joi.string().min(3).trim(),
+        image: Joi.string().min(3).trim()
     })
     try {
         await condition.validateAsync(req.body, {

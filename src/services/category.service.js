@@ -1,10 +1,13 @@
-import { categoryModel } from '../models/category.model'
+import { CategoryModel } from '../models/category.model'
 import { titleCase } from '../utils/formatData'
 
 const createNew = async (data) => {
     try {
-        const validateData = {...data, name: titleCase(data.name)}
-        const result = await categoryModel.createNew(validateData)
+        const checkExists = await CategoryModel.getCategoryName(data.categoryName)
+        if (checkExists)
+            return null
+        const validateData = {...data, categoryName: titleCase(data.categoryName)}
+        const result = await CategoryModel.createNew(validateData)
         return result
     } catch (error) {
         throw new Error(error)
@@ -14,14 +17,14 @@ const createNew = async (data) => {
 const update = async (id, data) => {
     try {
         let updateData = {}
-        if (data.name) {
+        if (data.categoryName) {
             updateData = {
                 ...data,
-                name: titleCase(data.name),
+                categoryName: titleCase(data.categoryName),
                 updatedAt: Date.now()
             }
         }
-        const result = await categoryModel.update(id, updateData)
+        const result = await CategoryModel.update(id, updateData)
         return result
     } catch (error) {
         throw new Error(error)
@@ -30,7 +33,7 @@ const update = async (id, data) => {
 
 const removeCategory = async (id) => {
     try {
-        const result = await categoryModel.removeCategory(id)
+        const result = await CategoryModel.removeCategory(id)
         return result
     } catch (error) {
         throw new Error(error)
@@ -39,7 +42,7 @@ const removeCategory = async (id) => {
 
 const softRemoveCategory = async (id) => {
     try {
-        const result = await categoryModel.update(id, { _destroy: true })
+        const result = await CategoryModel.update(id, { _destroy: true })
         return result
     } catch (error) {
         throw new Error(error)
@@ -48,7 +51,7 @@ const softRemoveCategory = async (id) => {
 
 const getAllCategories = async () => {
     try {
-        const result = await categoryModel.getAllCategories()
+        const result = await CategoryModel.getAllCategories()
 
         return result
     } catch (error) {
@@ -58,7 +61,7 @@ const getAllCategories = async () => {
 
 const getAllRemovedCategories = async () => {
     try {
-        const result = await categoryModel.getAllRemovedCategories()
+        const result = await CategoryModel.getAllRemovedCategories()
 
         return result
     } catch (error) {

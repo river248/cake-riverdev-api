@@ -4,8 +4,8 @@ import { getDB } from '../config/mongodb'
 
 const categoryCollectionName = 'categories'
 const categoryCollectionSchema = Joi.object({
-    name: Joi.string().required().min(3),
-    thumbnail: Joi.string().required().min(3),
+    categoryName: Joi.string().required().min(3),
+    image: Joi.string().required().min(3),
     createdAt: Joi.date().timestamp().default(Date.now()),
     updatedAt: Joi.date().timestamp().default(null),
     _destroy: Joi.boolean().default(false)
@@ -61,8 +61,8 @@ const getAllCategories = async () => {
                 _destroy: false
             })
             .project({
-                name: 1,
-                thumbnail: 1
+                categoryName: 1,
+                image: 1
             }).toArray()
 
         return result
@@ -80,8 +80,8 @@ const getAllRemovedCategories = async () => {
                 _destroy: true
             })
             .project({
-                name: 1,
-                thumbnail: 1,
+                categoryName: 1,
+                image: 1,
                 updatedAt: 1
             }).toArray()
 
@@ -92,10 +92,23 @@ const getAllRemovedCategories = async () => {
     }
 }
 
-export const categoryModel = {
+const getCategoryName = async (name) => {
+    try {
+        const result = await getDB().collection(categoryCollectionName).findOne({
+            categoryName: name,
+            _destroy: false
+        })
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+export const CategoryModel = {
     createNew,
     update,
     removeCategory,
     getAllCategories,
-    getAllRemovedCategories
+    getAllRemovedCategories,
+    getCategoryName
 }
