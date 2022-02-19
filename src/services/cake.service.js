@@ -58,6 +58,15 @@ const getCategoryCake = async (categoryID, page) => {
     }
 }
 
+const searchBy = async (key, page) => {
+    try {
+        const result = await CakeModel.searchBy(key, page)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const removeCake = async (id) => {
     try {
         const result = await CakeModel.removeCake(id)
@@ -118,6 +127,7 @@ export const CakeService = {
     getCakes,
     getDetailedCake,
     getCategoryCake,
+    searchBy,
     removeCake,
     removeCategoryCakes,
     softRemoveCake,

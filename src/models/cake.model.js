@@ -165,6 +165,24 @@ const getCategoryCake = async (categoryID, page) => {
     }
 }
 
+const searchBy = async (key, page) => {
+    try {
+        if (key === '')
+            return { cakes: [], quantityPages: 0 }
+        key = key.trim()
+        const cakes = await getDB().collection(cakeCollectionName).find({
+            name: new RegExp(key, 'i'),
+            _destroy: false
+        }, { projection: { name: 1, price: 1, thumbnail: 1 } }).sort({ name: 1 }).toArray()
+
+        const end = page*12
+        const result = cakes.slice(0, end)
+        return { cakes: result, quantityPages:  Math.ceil(cakes.length/12) }
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const removeCake = async (id) => {
     try {
         const result = await getDB().collection(cakeCollectionName).deleteOne({
@@ -283,6 +301,7 @@ export const CakeModel = {
     getCakes,
     getDetailedCake,
     getCategoryCake,
+    searchBy,
     removeCake,
     removeCategoryCakes,
     softRemoveCategoryCakes,
