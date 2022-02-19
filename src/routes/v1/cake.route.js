@@ -4,7 +4,10 @@ import { CakeValidation } from '../../validations/cake.validation'
 
 const router = express.Router()
 
-router.route('get-category-recycle-bin')
+router.route('/search')
+    .get(CakeController.searchBy)
+
+router.route('/get-category-recycle-bin')
     .get(CakeController.getSoftRemovedCategoryCakes)
     
 router.route('/get-recycle-bin')

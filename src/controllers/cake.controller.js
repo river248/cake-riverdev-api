@@ -60,6 +60,18 @@ const getCategoryCake = async (req, res) => {
     }
 }
 
+const searchBy = async (req, res) => {
+    try {
+        const { key, page } = req.query
+        const result = await CakeService.searchBy(key, page)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
 const removeCake = async (req, res) => {
     try {
         const { id } = req.params
@@ -138,6 +150,7 @@ export const CakeController = {
     getCakes,
     getDetailedCake,
     getCategoryCake,
+    searchBy,
     removeCake,
     removeCategoryCakes,
     getSoftRemovedCakes,
