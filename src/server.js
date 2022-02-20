@@ -21,7 +21,7 @@ const bootServer = () => {
             credentials: true,
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             origin: [
-                'https://cake-riverdev-api.herokuapp.com',
+                'https://cake-riverdev-web.herokuapp.com',
                 'http://localhost:3000',
                 'https://cake-riverdev-web.web.app',
                 'http://localhost:8080']
