@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import { env } from './config/enviroment'
 import { connectDB } from './config/mongodb'
 import { apiV1 } from './routes/v1'
 
@@ -36,8 +35,8 @@ const bootServer = () => {
     // Use APIs v1
     app.use('/v1', apiV1)
 
-    app.listen(env.APP_PORT, env.APP_HOST, () => {
-        console.log(`Hello Riverdev, I'm running at ${env.APP_HOST}:${env.APP_PORT}/`)
+    app.listen(process.env.PORT, () => {
+        console.log(`Hello Riverdev, I'm running at :${process.env.APP_PORT}/`)
     })
 
 }
