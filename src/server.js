@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import { env } from './config/enviroment'
 import { connectDB } from './config/mongodb'
 import { apiV1 } from './routes/v1'
@@ -16,6 +17,17 @@ const bootServer = () => {
     
     const app = express()
     
+    app.use(
+        cors({
+            credentials: true,
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+            origin: [
+                'https://cake-riverdev-api.herokuapp.com',
+                'http://localhost:3000',
+                'https://cake-riverdev-web.web.app',
+                'http://localhost:8080']
+        })
+    )
     // Enable req.body data
     app.use(express.json())
 
