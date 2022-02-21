@@ -26,8 +26,8 @@ const update = async (req, res) => {
 
 const getCakes = async (req, res) => {
     try {
-        const { page } = req.query
-        const result = await CakeService.getCakes(page)
+        const { sortBy, value, page } = req.query
+        const result = await CakeService.getCakes(sortBy, value, page)
         res.status(HttpStatusCode.OK).json(result)
     } catch (error) {
         res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -48,10 +48,10 @@ const getDetailedCake = async (req, res) => {
     }
 }
 
-const getCategoryCake = async (req, res) => {
+const getCategoryCakes = async (req, res) => {
     try {
-        const { categoryID, page } = req.query
-        const result = await CakeService.getCategoryCake(categoryID, page)
+        const { categoryID, sortBy, value, page } = req.query
+        const result = await CakeService.getCategoryCakes(categoryID, sortBy, value, page)
         res.status(HttpStatusCode.OK).json(result)
     } catch (error) {
         res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -149,7 +149,7 @@ export const CakeController = {
     update,
     getCakes,
     getDetailedCake,
-    getCategoryCake,
+    getCategoryCakes,
     searchBy,
     removeCake,
     removeCategoryCakes,

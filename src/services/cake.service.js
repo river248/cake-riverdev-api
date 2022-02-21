@@ -31,9 +31,9 @@ const update = async (id, data) => {
     }
 }
 
-const getCakes = async (page) => {
+const getCakes = async (sortBy, value, page) => {
     try {
-        const result = await CakeModel.getCakes(page)
+        const result = await CakeModel.getCakes(sortBy, value*1, page)
         return result
     } catch (error) {
         throw new Error(error)
@@ -49,9 +49,9 @@ const getDetailedCake = async (id) => {
     }
 }
 
-const getCategoryCake = async (categoryID, page) => {
+const getCategoryCakes = async (categoryID, sortBy, value, page) => {
     try {
-        const result = await CakeModel.getCategoryCake(categoryID, page)
+        const result = await CakeModel.getCategoryCakes(categoryID, sortBy, value*1, page)
         return result
     } catch (error) {
         throw new Error(error)
@@ -126,7 +126,7 @@ export const CakeService = {
     update,
     getCakes,
     getDetailedCake,
-    getCategoryCake,
+    getCategoryCakes,
     searchBy,
     removeCake,
     removeCategoryCakes,

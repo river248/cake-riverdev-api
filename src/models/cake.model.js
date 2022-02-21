@@ -67,30 +67,83 @@ const getProductByName = async (productName) => {
     }
 }
 
-const getCakes = async (page) => {
+const getCakes = async (sortBy, value, page) => {
     try {
-        const cakes = await getDB().collection(cakeCollectionName).aggregate([
-            { $match: { _destroy: false } }, {
-                $sort: { createdAt: -1, updatedAt: -1 }
-            }, {
-                $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
-            }, { 
-                $lookup: {
-                    from: 'categories',
-                    localField: 'categoryID',
-                    foreignField: '_id',
-                    as: 'category'
-                },
-            }, {
-                $replaceRoot: {
-                    newRoot: {
-                        $mergeObjects: [
-                            { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
-                        ]
-                    }
-                }
-             }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
-        ]).toArray()
+        let cakes
+        switch (sortBy) {
+            case 'name':
+                cakes = await getDB().collection(cakeCollectionName).aggregate([
+                    { $match: { _destroy: false } }, {
+                        $sort: { name: value }
+                    }, {
+                        $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+                    }, { 
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryID',
+                            foreignField: '_id',
+                            as: 'category'
+                        },
+                    }, {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                                ]
+                            }
+                        }
+                    }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+                ]).toArray()
+                break
+            case 'price':
+                cakes = await getDB().collection(cakeCollectionName).aggregate([
+                    { $match: { _destroy: false } }, {
+                        $sort: { price: value }
+                    }, {
+                        $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+                    }, { 
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryID',
+                            foreignField: '_id',
+                            as: 'category'
+                        },
+                    }, {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                                ]
+                            }
+                        }
+                    }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+                ]).toArray()
+                break
+            default:
+                cakes = await getDB().collection(cakeCollectionName).aggregate([
+                    { $match: { _destroy: false } }, {
+                        $sort: { createdAt: -1, updatedAt: -1 }
+                    }, {
+                        $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+                    }, { 
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryID',
+                            foreignField: '_id',
+                            as: 'category'
+                        },
+                    }, {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                                ]
+                            }
+                        }
+                    }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+                ]).toArray()
+                break
+        }
         const begin = (page - 1)*12
         const end = page*12
         const result = cakes.slice(begin, end)
@@ -130,30 +183,84 @@ const getDetailedCake = async (id) => {
     }
 }
 
-const getCategoryCake = async (categoryID, page) => {
+const getCategoryCakes = async (categoryID, sortBy, value, page) => {
     try {
-        const cakes = await getDB().collection(cakeCollectionName).aggregate([
-            { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
-                $sort: { createdAt: -1, updatedAt: -1 }
-            }, {
-                $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
-            }, { 
-                $lookup: {
-                    from: 'categories',
-                    localField: 'categoryID',
-                    foreignField: '_id',
-                    as: 'category'
-                },
-            }, {
-                $replaceRoot: {
-                    newRoot: {
-                        $mergeObjects: [
-                            { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
-                        ]
-                    }
-                }
-             }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
-        ]).toArray()
+        let cakes
+        switch (sortBy) {
+            case 'name': //Filtering category and sorting by name
+                cakes = await getDB().collection(cakeCollectionName).aggregate([
+                    { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
+                        $sort: { name: value }
+                    }, {
+                        $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+                    }, { 
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryID',
+                            foreignField: '_id',
+                            as: 'category'
+                        },
+                    }, {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                                ]
+                            }
+                        }
+                    }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+                ]).toArray()
+                break
+            case 'price': //Filtering category and sorting by price
+                cakes = await getDB().collection(cakeCollectionName).aggregate([
+                    { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
+                        $sort: { price: value }
+                    }, {
+                        $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+                    }, { 
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryID',
+                            foreignField: '_id',
+                            as: 'category'
+                        },
+                    }, {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                                ]
+                            }
+                        }
+                    }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+                ]).toArray()
+                break
+            default:
+                cakes = await getDB().collection(cakeCollectionName).aggregate([
+                    { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
+                        $sort: { createdAt: -1, updatedAt: -1 }
+                    }, {
+                        $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+                    }, { 
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'categoryID',
+                            foreignField: '_id',
+                            as: 'category'
+                        },
+                    }, {
+                        $replaceRoot: {
+                            newRoot: {
+                                $mergeObjects: [
+                                    { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                                ]
+                            }
+                        }
+                    }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+                ]).toArray()
+                break
+        }
+         
         const begin = (page - 1)*12
         const end = page*12
         const result = cakes.slice(begin, end)
@@ -300,7 +407,7 @@ export const CakeModel = {
     getProductByName,
     getCakes,
     getDetailedCake,
-    getCategoryCake,
+    getCategoryCakes,
     searchBy,
     removeCake,
     removeCategoryCakes,
