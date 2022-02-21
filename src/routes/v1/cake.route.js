@@ -21,7 +21,7 @@ router.route('/remove-category/:categoryID')
     .put(CakeController.softRemoveCategoryCakes)
 
 router.route('/get-category-cake')
-    .get(CakeController.getCategoryCake)
+    .get(CakeController.getCategoryCakes)
 
 router.route('/:id')
     .delete(CakeController.removeCake)
