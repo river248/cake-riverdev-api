@@ -277,14 +277,34 @@ const searchBy = async (key, page) => {
         if (key === '')
             return { cakes: [], quantityPages: 0 }
         key = key.trim()
-        const cakes = await getDB().collection(cakeCollectionName).find({
-            name: new RegExp(key, 'i'),
-            _destroy: false
-        }, { projection: { name: 1, price: 1, thumbnail: 1 } }).sort({ name: 1 }).toArray()
+        const cakes = await getDB().collection(cakeCollectionName).aggregate([
+            { $match: { name: new RegExp(key, 'i'), _destroy: false } }, {
+                $sort: { name: 1 }
+            }, {
+                $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
+            }, { 
+                $lookup: {
+                    from: 'categories',
+                    localField: 'categoryID',
+                    foreignField: '_id',
+                    as: 'category'
+                },
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            { $arrayElemAt: [ "$category", 0 ] }, "$$ROOT"
+                        ]
+                    }
+                }
+            }, { $project: { category: 0, image: 0, createdAt: 0, updatedAt: 0, _destroy: 0 } }
+        ]).toArray()
 
+        const begin = (page - 1)*12
         const end = page*12
-        const result = cakes.slice(0, end)
-        return { cakes: result, quantityPages:  Math.ceil(cakes.length/12) }
+        const result = cakes.slice(begin, end)
+        const quantityPages = Math.ceil(cakes.length / 12)
+        return { cakes: result, quantityPages: quantityPages }
     } catch (error) {
         throw new Error(error)
     }
