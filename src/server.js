@@ -35,12 +35,12 @@ const bootServer = () => {
     // Use APIs v1
     app.use('/v1', apiV1)
 
-    // app.listen(process.env.PORT, () => {
-    //     console.log(`Hello Riverdev, I'm running at :${process.env.APP_PORT}/`)
-    // })
-
-    app.listen(8080, () => {
+    app.listen(process.env.PORT, () => {
         console.log(`Hello Riverdev, I'm running at :${process.env.APP_PORT}/`)
     })
+
+    // app.listen(8080, () => {
+    //     console.log(`Hello Riverdev, I'm running at :${process.env.APP_PORT}/`)
+    // })
 
 }
