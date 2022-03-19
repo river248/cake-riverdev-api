@@ -32,7 +32,7 @@ const createNew = async (data) => {
         const validData = { ...data, listProducts: [...listNewProduct]}
         const result = await TransactionModel.createNew(validData)
         if (result && validData.customer.email)
-            await mailHelper.sendMail(validData.customer.email, validData)
+            await mailHelper.sendMail(validData.customer.email, validData, null, null)
         return result.insertedId
     } catch (error) {
         throw new Error(error)
