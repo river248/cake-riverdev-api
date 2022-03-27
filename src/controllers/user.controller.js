@@ -135,11 +135,94 @@ const generalReturn = (res, accessToken, refreshToken) => {
     return res.status(HttpStatusCode.OK).json({ accessToken })
 }
 
+const getUserInfo = async (req, res) => {
+    try {
+        const { _id } = req.jwtDecoded.data
+        const result = await UserService.getUserInfo(_id)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
+const getAllUsers = async (req, res) => {
+    try {
+        const { page } = req.params
+        const result = await UserService.getAllUsers(page)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
+const getLoveCakes = async (req, res) => {
+    try {
+        const { page } = req.query
+        const { _id } = req.jwtDecoded.data
+        const result = await UserService.getLoveCakes(_id, page)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
+const updateLoveCake = async (req, res) => {
+    try {
+        const { cakeID } = req.query
+        const { _id } = req.jwtDecoded.data
+        const result = await UserService.updateLoveCake(_id, cakeID)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
+const loveStatus = async (req, res) => {
+    try {
+        const { cakeID } = req.query
+        const { _id } = req.jwtDecoded.data
+        const result = await UserService.loveStatus(_id, cakeID)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
+const update = async (req, res) => {
+    try {
+        const { data } = req.body
+        const { type } = req.query
+        const { _id } = req.jwtDecoded.data
+        const result = await UserService.update(_id, data, type)
+        res.status(HttpStatusCode.OK).json(result)
+    } catch (error) {
+        res.HttpStatusCode(INTERNAL_SERVER).json({
+            errors: error.message
+        })
+    }
+}
+
 export const UserController = {
     register,
     verifyEmail,
     login,
     refreshToken,
     socialLogin,
-    logout
+    logout,
+    getUserInfo,
+    getAllUsers,
+    getLoveCakes,
+    updateLoveCake,
+    loveStatus,
+    update
 }

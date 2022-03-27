@@ -77,7 +77,27 @@ const login = (req, res, next) => {
     }
 }
 
+const update = async (req, res, next) => {
+    const condition = Joi.object({
+        username: Joi.string().min(3).max(50).trim(),
+        password: Joi.string().min(8).trim(),
+        phone: Joi.string().min(9).max(11).trim(),
+    })
+    try {
+        await condition.validateAsync(req.body, {
+            abortEarly: false,
+            allowUnknown: true
+        })
+        next()
+    } catch (error) {
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+            error: new Error(error).message
+        })
+    }
+}
+
 export const UserValidation = {
     register,
-    login
+    login,
+    update
 }

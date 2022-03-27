@@ -151,6 +151,71 @@ const generalReturn = async (userData) => {
     }
 }
 
+const getUserInfo = async (id) => {
+    try {
+        const result = await UserModel.getUserInfo(id)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const getAllUsers = async (page) => {
+    try {
+        const result = await UserModel.getAllUsers(page)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const getLoveCakes = async (userID, page) => {
+    try {
+        const result = await UserModel.getLoveCakes(userID, page)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const updateLoveCake = async (userID, cakeID) => {
+    try {
+        const result = await UserModel.updateLoveCake(userID, cakeID)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const loveStatus = async (userID, cakeID) => {
+    try {
+        const result = await UserModel.loveStatus(userID, cakeID)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+const update = async (id, data, type) => {
+    try {
+        let updateData = {}
+        if (type === 'update')
+            updateData = {
+                ...data,
+                updateAt: Date.now()
+            }
+        else
+            updateData = {
+                _destroy: true,
+                updateAt: Date.now()
+            }
+        const result = await UserModel.update(id, data)
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 export const UserService = {
     register,
     verifyEmail,
@@ -158,5 +223,11 @@ export const UserService = {
     login,
     refreshToken,
     googleLogin,
-    facebookLogin
+    facebookLogin,
+    getUserInfo,
+    getAllUsers,
+    getLoveCakes,
+    updateLoveCake,
+    loveStatus,
+    update
 }
