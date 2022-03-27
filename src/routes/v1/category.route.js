@@ -1,21 +1,23 @@
 import express from 'express'
 import { CategoryController } from '../../controllers/category.controller'
+import { AuthMiddleware } from '../../middlewares/auth.middleware'
+import { RoleMiddleware } from '../../middlewares/role.middleware'
 import { CategoryValidation } from '../../validations/category.validation'
 
 const router = express.Router()
 
 router.route('/recycle-bin')
-    .get(CategoryController.getAllRemovedCategories)
+    .get(AuthMiddleware.isAuth, RoleMiddleware.isAdmin, CategoryController.getAllRemovedCategories)
     
 router.route('/soft-remove/:id')
-    .put(CategoryController.softRemoveCategory)
+    .put(AuthMiddleware.isAuth, RoleMiddleware.isAdmin, CategoryController.softRemoveCategory)
 
 router.route('/:id')
-    .put(CategoryValidation.update, CategoryController.update)
-    .delete(CategoryController.removeCategory)
+    .put(AuthMiddleware.isAuth, RoleMiddleware.isAdmin, CategoryValidation.update, CategoryController.update)
+    .delete(AuthMiddleware.isAuth, RoleMiddleware.isAdmin, CategoryController.removeCategory)
 
 router.route('/')
     .get(CategoryController.getAllCategories)
-    .post(CategoryValidation.createNew, CategoryController.createNew)
+    .post(AuthMiddleware.isAuth, RoleMiddleware.isAdmin, CategoryValidation.createNew, CategoryController.createNew)
 
 export const categoryRoutes = router
