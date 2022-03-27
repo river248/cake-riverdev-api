@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { getDB } from '../config/mongodb'
 
 const categoryCollectionName = 'categories'
@@ -32,7 +32,7 @@ const createNew = async (data) => {
 const update = async (id, data) => {
     try {
         const result = await getDB().collection(categoryCollectionName).findOneAndUpdate(
-            { _id: ObjectID(id) },
+            { _id: ObjectId(id) },
             { $set: data },
             { returnOriginal: false }
         )
@@ -45,7 +45,7 @@ const update = async (id, data) => {
 const removeCategory = async (id) => {
     try {
         const result = await getDB().collection(categoryCollectionName).deleteOne({
-            _id: ObjectID(id)
+            _id: ObjectId(id)
         })
         return result
     } catch (error) {

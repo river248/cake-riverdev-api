@@ -1,5 +1,5 @@
 import Joi, { date } from 'joi'
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { getDB } from '../config/mongodb'
 import { titleCase } from '../utils/formatData'
 
@@ -24,7 +24,7 @@ const createNew = async (data) => {
         const value = await validateSchema(data)
         const valueValidated = {
             ...value,
-            categoryID: ObjectID(value.categoryID),
+            categoryID: ObjectId(value.categoryID),
             createdAt: Date.now()
         }
         const result = await getDB().collection(cakeCollectionName).insertOne(valueValidated)
@@ -40,11 +40,11 @@ const update = async (id, data) => {
         if (data.categoryID)
             updatedData = {
                 ...data,
-                categoryID: ObjectID(data.categoryID)
+                categoryID: ObjectId(data.categoryID)
             }
         else updatedData = {...data}
         const result = await getDB().collection(cakeCollectionName).findOneAndUpdate(
-            { _id: ObjectID(id) },
+            { _id: ObjectId(id) },
             { $set: updatedData },
             { returnOriginal: false }
         )
@@ -158,7 +158,7 @@ const getCakes = async (sortBy, value, page) => {
 const getDetailedCake = async (id) => {
     try {
         const result = await getDB().collection(cakeCollectionName).aggregate([
-            { $match: { _id: ObjectID(id), _destroy: false } }, {
+            { $match: { _id: ObjectId(id), _destroy: false } }, {
                 $project: { updatedAt: 0, createdAt: 0, _destroy: 0 }
             }, { 
                 $lookup: {
@@ -189,7 +189,7 @@ const getCategoryCakes = async (categoryID, sortBy, value, page) => {
         switch (sortBy) {
             case 'name': //Filtering category and sorting by name
                 cakes = await getDB().collection(cakeCollectionName).aggregate([
-                    { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
+                    { $match: { categoryID: ObjectId(categoryID), _destroy: false } }, {
                         $sort: { name: value }
                     }, {
                         $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
@@ -213,7 +213,7 @@ const getCategoryCakes = async (categoryID, sortBy, value, page) => {
                 break
             case 'price': //Filtering category and sorting by price
                 cakes = await getDB().collection(cakeCollectionName).aggregate([
-                    { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
+                    { $match: { categoryID: ObjectId(categoryID), _destroy: false } }, {
                         $sort: { price: value }
                     }, {
                         $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
@@ -237,7 +237,7 @@ const getCategoryCakes = async (categoryID, sortBy, value, page) => {
                 break
             default:
                 cakes = await getDB().collection(cakeCollectionName).aggregate([
-                    { $match: { categoryID: ObjectID(categoryID), _destroy: false } }, {
+                    { $match: { categoryID: ObjectId(categoryID), _destroy: false } }, {
                         $sort: { createdAt: -1, updatedAt: -1 }
                     }, {
                         $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
@@ -313,7 +313,7 @@ const searchBy = async (key, page) => {
 const removeCake = async (id) => {
     try {
         const result = await getDB().collection(cakeCollectionName).deleteOne({
-            _id: ObjectID(id)
+            _id: ObjectId(id)
         })
         return result
     } catch (error) {
@@ -324,7 +324,7 @@ const removeCake = async (id) => {
 const removeCategoryCakes = async (categoryID) => {
     try {
         const result = await getDB().collection(cakeCollectionName).deleteMany({
-            categoryID: ObjectID(categoryID)
+            categoryID: ObjectId(categoryID)
         })
         return result
     } catch (error) {
@@ -335,12 +335,12 @@ const removeCategoryCakes = async (categoryID) => {
 const softRemoveCategoryCakes = async (categoryID) => {
     try {
         const cakes = await getDB().collection(cakeCollectionName).find({
-            categoryID: ObjectID(categoryID),
+            categoryID: ObjectId(categoryID),
             _destroy: false
         }).toArray()
         const result = cakes.map( async (cake) => {
             await getDB().collection(cakeCollectionName).findOneAndUpdate(
-                { _id: ObjectID(cake._id) },
+                { _id: ObjectId(cake._id) },
                 { $set: { updatedAt: Date.now(), _destroy: true } },
                 { returnOriginal: false }
             )
@@ -389,7 +389,7 @@ const getSoftRemovedCakes = async (page) => {
 const getSoftRemovedCategoryCakes = async (categoryID, page) => {
     try {
         const cakes = await getDB().collection(cakeCollectionName).aggregate([
-            { $match: { categoryID: ObjectID(categoryID), _destroy: true } }, {
+            { $match: { categoryID: ObjectId(categoryID), _destroy: true } }, {
                 $sort: { updatedAt: -1 }
             }, {
                 $project: { name: 1, thumbnail: 1, categoryID: 1, price: 1 }
