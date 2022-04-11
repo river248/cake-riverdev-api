@@ -1,4 +1,5 @@
-import { HttpStatusCode } from '../utilities/constants'
+import { HttpStatusCode } from '../utils/constants'
+
 
 const isAdmin = async (req, res, next) => {
     try {

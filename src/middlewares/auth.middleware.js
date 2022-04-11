@@ -1,6 +1,7 @@
 import { env } from '../config/enviroment'
 import { jwtHelper } from '../helpers/jwt.helper'
-import { HttpStatusCode } from '../utilities/constants'
+import { HttpStatusCode } from '../utils/constants'
+
 
 const isAuth = async (req, res, next) => {
 
@@ -13,9 +14,9 @@ const isAuth = async (req, res, next) => {
         // Decrypt the token to see if it is valid or not?
             const decoded = await jwtHelper.verifyToken(tokenFromClient, env.ACCESS_TOKEN_SECRET)
 
-            // If the token is valid, save the decrypted information to the "req" object, for later processing.
+            // If the token is valid, save the decrypted information to the 'req' object, for later processing.
             req.jwtDecoded = decoded
-            // Allow "req" to go forward to the controller.
+            // Allow 'req' to go forward to the controller.
             next()
         } catch (error) {
         // If decoding encounters an error: Invalid, expired...etc:
